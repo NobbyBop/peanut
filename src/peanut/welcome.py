@@ -14,5 +14,4 @@ hi, i'm
 888                                                     
 888                                                             
 
-let me know what i can help you with
-""")
+"""+Fore.RESET)
