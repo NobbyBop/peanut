@@ -5,8 +5,9 @@ def generate_session_title(messages):
         {
             'role':'user',
             'content': f"""
-You must create a title for this conversation in no more than 5 words, all lowercase.
-Conversation:
+you must create a title for this conversation with in no more than 5 words, all lowercase.
+be quirky. all conversations are with peanut, only include peanut if conversation content is about peanut.
+conversation:
 {messages}
 """
         }
