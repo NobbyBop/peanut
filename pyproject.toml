@@ -1,0 +1,21 @@
+[project]
+name = "peanut"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Nicholas Mirigliani", email = "nicholasmirigliani@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "colorama>=0.4.6",
+    "ollama>=0.6.3",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+peanut = "peanut:main"
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.13.0"]
+build-backend = "uv_build"
