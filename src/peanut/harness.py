@@ -2,6 +2,7 @@ from .conversation import Conversation
 from colorama import Fore
 from ollama import chat
 from .sessions import load_session, save_session
+from .printing import print_peanut_nametag
 import os
 
 SYSTEM_PROMPT = f"""
@@ -21,9 +22,8 @@ def harness_loop(session_id=""):
         return
     conversation.add_message('user', user_message)
     while True:
-        stream = invoke_harness(conversation, user_message, os.environ.get("MODEL") or "gemma4:e2b")
-        print("-")
-        print(Fore.YELLOW + f"peanut > "+Fore.RESET, end="")
+        stream = invoke_harness(conversation, user_message, os.environ.get("MODEL") or "gemma4:e2b", [])
+        print_peanut_nametag()
         peanut_message = ""
         for chunk in stream:
             print(chunk['message']['content'], end='', flush=True)
@@ -36,12 +36,13 @@ def harness_loop(session_id=""):
         conversation.add_message('user', user_message)
     save_session(conversation.get_messages(), id=session_id)
 
-def invoke_harness(conversation, user_message, model):
+def invoke_harness(conversation, user_message, model, tools):
     conversation.add_message('user', user_message)
     stream = chat(
         model=model,
         messages=conversation.get_messages(),
         think=False,
-        stream=True
+        stream=True,
+        tools=tools
     )
     return stream

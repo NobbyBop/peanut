@@ -25,7 +25,7 @@ def load_session(id:str):
             data = json.loads(content)
             return data["messages"]
     except:
-        raise KeyError(f"Session with ID {id} does not exist")
+        raise FileNotFoundError(f"Session with ID {id} does not exist at {sessions_path}")
 
 def save_session(messages, id=""):
     if id == "":
@@ -52,4 +52,4 @@ def get_session_title(id):
             data = json.loads(content)
             return data["title"]
     except:
-        raise KeyError(f"Session with ID {id} does not exist")
+        raise FileNotFoundError(f"Session with ID {id} does not exist at {sessions_path}")
