@@ -11,6 +11,15 @@ class Conversation:
             }
         ]
 
+    def add_tool(self, name, result):
+        self.messages += [
+            {
+                'role':'tool',
+                'tool_name':name,
+                'result':result
+            }
+        ]
+
     def add_session(self, session):
         for message in session:
             self.add_message(message['role'], message['content'])
