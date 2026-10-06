@@ -7,9 +7,18 @@ class Conversation:
         self.messages += [
             {
                 'role':role,
-                'content':content
+                'content':content,
             }
         ]
+
+    def add_message_with_thinking(self, role, content, thinking):
+            self.messages += [
+                {
+                    'role':role,
+                    'content':content,
+                    'thinking':thinking
+                }
+            ]
 
     def add_tool(self, name, result):
         self.messages += [
