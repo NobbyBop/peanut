@@ -32,6 +32,8 @@ a minimal harness for tiny models. it's just a little peanut.
 
 ## tools
 1. defined in `TOOLS_DIR` as individual python modules.
-2. module `<name>.py` must define functions:
+2. module `<name>.py` must define function:
  1. `<name>()` - the tool logic
- 2. `describe()` - an optional explanation of the tool and when to use it
+
+## todo
+- [] investigate tool calls entering agent's conversation history

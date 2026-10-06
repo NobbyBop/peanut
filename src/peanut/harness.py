@@ -18,6 +18,10 @@ def harness_loop(session_id=""):
         conversation.add_session(session)
     else:
         conversation.add_message('system', SYSTEM_PROMPT)
+
+        ## AGENT CAN'T SEEM TO SEE THIS FORMAT!!!
+        conversation.add_tool("foo", "bar")
+        
     user_message = input("you > ")
     if user_message == "/exit":
         return
