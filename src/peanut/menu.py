@@ -3,8 +3,6 @@ from .printing import print_title, print_heading, print_peanut_nametag
 from .sessions import get_list_sessions, get_session_title
 from colorama import Fore
 
-
-
 class Menu():
 
     def __init__(self, options: list):
@@ -41,8 +39,8 @@ class Menu():
         while not self._validate_selected(user_input):
             try:
                 user_input = int(input("you > "))
-            except:
-                print_heading("input our of range")
+            except TypeError:
+                print_heading("input out of range")
         return user_input
 
 def session_menu() -> tuple[str, str]:

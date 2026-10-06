@@ -20,23 +20,3 @@ conversation:
     )
     return response["message"]["content"]
 
-
-def test():
-    prompt = [
-        {
-            'role':'joe',
-            'content': """you should be able to see the conversation history between us, right? can you see my 'role' as well?
-             messages are sent like this: 
-             {
-                'role':'role here',
-                'content': 'string'
-            }"""
-        }
-    ]
-    response = chat(
-        model=os.environ.get("MODEL") or "gemma4:e2b",
-        messages=prompt,
-        think=False,
-        stream=False
-    )
-    return response["message"]["content"]

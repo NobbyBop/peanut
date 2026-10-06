@@ -1,3 +1,3 @@
-def echo(a, b, c):
-    """ simply returns f"{a} {b} {c}" """
-    return f"{a} {b} {c}"
+def echo(message):
+    """ simply returns message """
+    return message
