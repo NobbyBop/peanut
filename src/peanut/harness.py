@@ -17,7 +17,7 @@ You will be given:
 
 You will respond with a summary of knowledge from the message that peanut will use to respond.
 Only report on what exists, do not mention lack of context."""
-
+ 
 def build_summarizer_prompt(conversation:Conversation, user_message:str) -> str:
     return f"""The pre-selected list of messages:
 <messages>
@@ -68,6 +68,8 @@ def optimize_context(conversation:Conversation, user_message)-> Conversation:
     if num_messages <= 1:
         return conversation
     optimized_conversation = Conversation()
+
+    ## Could do this concurrently...? Maybe.
     for i in range(num_messages-1):
         prompt = build_optimizer_prompt(conversation, user_message, i)
         valid = invoke_model(os.environ.get("MODEL", "llama3.1:8b"), prompt, OPTIMIZER_SYSTEM_PROMPT)
