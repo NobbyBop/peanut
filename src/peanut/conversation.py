@@ -1,4 +1,4 @@
-ASSISTANT_NAME='assistant'
+ASSISTANT_NAME='peanut'
 class Conversation:
 
     def __init__(self):
@@ -42,3 +42,9 @@ the result was: {result}
 
     def get_messages(self):
         return self.messages
+
+    def to_str(self):
+        convsersation_string = ""
+        for message in self.messages:
+            convsersation_string += f"{message['role']} > {message['content']}\n"
+        return convsersation_string
