@@ -1,3 +1,5 @@
+from itertools import islice
+
 ASSISTANT_NAME='assistant'
 class Conversation:
 
@@ -40,5 +42,15 @@ the result was: {result}
         for message in session:
             self._add_message(message.role, message.content, message.thinking or "", message.tool_id or "")
 
-    def get_messages(self):
-        return self.messages
+    def get_messages(self, n=0):
+        conversation_messages = self.messages
+        if n > 0:
+            conversation_messages  = list(islice(reversed(conversation_messages), 0, n))
+            conversation_messages.reverse()
+        return conversation_messages
+
+    def to_str(self, n):
+        convsersation_string = ""
+        for message in self.get_messages(n):
+            convsersation_string += f"{message['role']} > {message['content']}\n"
+        return convsersation_string
