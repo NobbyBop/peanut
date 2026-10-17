@@ -59,7 +59,7 @@ def harness_loop():
         user_message = input("you > ")
         conversation.add_message('user', user_message)
         prompt = build_chat_prompt(conversation)
-        response = json.loads(invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT))
+        response = json.loads(invoke_model(prompt))
         while response["action"] == "get" or response["action"] == "post":
             print_peanut_tool(response["action"])
             if response["action"] == "get":
@@ -69,10 +69,10 @@ def harness_loop():
                 conversation.add_message('peanut', response)
                 conversation.add_message('server', 'data: {"success":"true"}')
             prompt = build_chat_prompt(conversation)
-            response = json.loads(invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT))
+            response = json.loads(invoke_model(prompt))
         conversation.add_message('peanut', response["message"])
         print_peanut_nametag(response["message"])
 
-def invoke_model(model: str, prompt:str, system:str) -> str:
-    resp = generate(model=model, system=system, prompt=prompt)
+def invoke_model(prompt:str) -> str:
+    resp = generate(model=os.environ.get("MODEL", "gemma4:e2b"), system=CHAT_SYSTEM_PROMPT, prompt=prompt)
     return resp.response or "{}"
