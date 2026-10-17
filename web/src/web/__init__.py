@@ -1,2 +1,2 @@
 def main() -> None:
-    print("Hello from web!")
+    print("hello from main")
