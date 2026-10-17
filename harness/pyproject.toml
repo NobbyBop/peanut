@@ -1,7 +1,7 @@
 [project]
-name = "peanut"
+name = "harness"
 version = "0.1.0"
-description = "Add your description here"
+description = "the minimal agent harness"
 readme = "README.md"
 authors = [
     { name = "Nicholas Mirigliani", email = "nicholasmirigliani@gmail.com" }
@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-peanut = "peanut:main"
+harness = "harness:main"
 
 [build-system]
 requires = ["uv_build>=0.12.22,<0.13.0"]

@@ -1,4 +1,4 @@
-# peanut
+# harness
 a minimal harness for tiny models. it's just a little peanut.
 
 ## how to run it quickly
