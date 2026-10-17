@@ -1,10 +1,20 @@
 from .conversation import Conversation
-from colorama import Fore
-from ollama import chat, generate
-from .sessions import load_session, save_session
-from .printing import print_peanut_nametag
+from ollama import generate
+from .printing import print_peanut_nametag, print_peanut_tool
 import os
+from pydantic import BaseModel
+from enum import Enum
+import json
 
+class Action(Enum):
+    respond = "respond"
+    get = "get"
+    post = "post"
+
+class ResponseFormat(BaseModel):
+    action: Action
+    message: str | None
+    body: dict | None
 
 SLIDING_WINDOW = 25
 
@@ -23,18 +33,17 @@ your goal:
     - messages after the user message means either the system or server has responded to you
 
 you must do one of the following two things to respond to the user's message:
-1. respond directly - begin your message with "[respond]"
-    - follow [respond] with the message you want the user to see, separated by a space
-    - ex: "[respond] hey there user"
-2. get data from the remote server - your entire message should be "[get]"
-    - ex: "[get]"
+1. respond directly - choose the "respond" action
+    - set the "message" to the message you want the user to see
+    - ex: {"action": "respond", "message":"hey there user"}
+2. get data from the remote server - choose the "get" action
+    - leave all fields blank
+    - ex: {"action": "get"}
     - note: you will receive a 'server' message with the data, or receive a failure.
-3. post data to the remote server - begin your message with "[post]"
-    - ex: "[post] hello server"
-    - note: the user cannot see the remote server
+3. post data to the remote server - choose the "post" action
+    - set the "body" to the json payload you want to post
+    - ex: {"action": "post", "body":<data here>}
     - note: you will receive a success/fail message from the server after doing this
-
-critical: any response that does not begin with [respond], [get], or [post] will be rejected and the loop will crash.
 """
 
 def build_chat_prompt(conversation:Conversation) -> str:
@@ -44,55 +53,32 @@ def build_chat_prompt(conversation:Conversation) -> str:
 </conversation>
 """ )
 
-def parse_model_response(response:str):
-    if not response.startswith("["):
-        raise ValueError("Response is invalid. Does not start with '['")
-    idx = response.find(']')
-    if idx == -1:
-        raise ValueError("Response is invalid. Does not close '[' with ']'")
-    action = response[1:idx]
-    if action not in ["respond", "get", "post"]:
-        raise ValueError("Response is invalid. Action must be either 'respond', 'get', or 'post'")
-    return {
-        "action":action,
-        "body": response[idx+1:]
-        }
-
-def harness_loop(session_id=""):
+def harness_loop():
     conversation = Conversation() 
-    if session_id != "":
-        session = load_session(session_id)
-        conversation.add_session(session)
     user_message = input("you > ")
     if user_message == "/exit":
         return
     conversation.add_message('user', user_message)
     while True:
         prompt = build_chat_prompt(conversation)
-        raw_response = invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT)
-        print("raw:", raw_response)
-        response = parse_model_response(raw_response)
-
+        response = json.loads(invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT))
         while response["action"] == "get" or response["action"] == "post":
+            print_peanut_tool(response["action"])
             if response["action"] == "get":
-                conversation.add_message('peanut', raw_response)
+                conversation.add_message('peanut', response)
                 conversation.add_message('server', 'data: {"number":42}')
             else:
-                conversation.add_message('peanut', raw_response)
+                conversation.add_message('peanut', response)
                 conversation.add_message('server', 'data: {"success":"true"}')
             prompt = build_chat_prompt(conversation)
-            raw_response = invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT)
-            response = parse_model_response(raw_response)
-            
-        conversation.add_message('peanut', response)
-        print_peanut_nametag(response["body"])
+            response = json.loads(invoke_model(os.environ.get("MODEL", "gemma4:e2b"), prompt, CHAT_SYSTEM_PROMPT))
+        conversation.add_message('peanut', response["message"])
+        print_peanut_nametag(response["message"])
         user_message = input("you > ")
         if user_message == "/exit":
             break
         conversation.add_message('user', user_message)
-    save_session(conversation.get_messages(), id=session_id)
-
 
 def invoke_model(model: str, prompt:str, system:str) -> str:
-    resp = generate(model=model, system=system, prompt=prompt, stream=False, think=True)
-    return resp.response or ""
+    resp = generate(model=model, system=system, prompt=prompt)
+    return resp.response or "{}"

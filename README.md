@@ -10,30 +10,6 @@ a minimal harness for tiny models. it's just a little peanut.
 2. `uv sync`
 3. `uv run peanut`
 
-## sessions
-1. created when exiting a chat with /exit
-2. keyed by date
-3. format:
-```json
-{
-    "title":"example title",
-    "messages":[
-        {
-            'role':'user',
-            'content':"blah blah blah"
-        },
-        {
-            'role':'assistant',
-            'content':"blah blah blah"
-        }, 
-    ]
-}
-```
-
-## tools
-1. defined in `TOOLS_DIR` as individual python modules.
-2. module `<name>.py` must define function:
- 1. `<name>()` - the tool logic
-
-## todo
-- [] investigate tool calls entering agent's conversation history
+## findings
+- local models struggle with tools, i worked around this by using the `format` option on `ollama.generate()`
+    - required the model to select `respond` or `<tool_name>` as its `action`

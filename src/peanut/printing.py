@@ -35,6 +35,12 @@ def print_goodbye():
 
 def print_peanut_nametag(message=""):
     if message == "":
-        print("-\n"+Fore.YELLOW + f"peanut > " + Fore.RESET, end="")
+        print(Fore.YELLOW + f"peanut > " + Fore.RESET, end="")
     else:
-        print("-\n"+Fore.YELLOW + f"peanut > " + Fore.RESET + message + "\n-")
+        print(Fore.YELLOW + f"peanut > " + Fore.RESET + message)
+
+def print_peanut_tool(tool_name):
+    print(Fore.YELLOW + f"< peanut is calling [{tool_name}] > " + Fore.RESET)
+
+def print_peanut_thinking():
+    print(Fore.YELLOW + f"< peanut is thinking... > " + Fore.RESET)
