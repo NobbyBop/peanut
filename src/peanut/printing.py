@@ -4,9 +4,9 @@ import os
 
 def clear_screen():
     if os.name == "nt":
-        subprocess.run(["cls"], shell=True)
+        subprocess.run(['cls'], shell=True)
     else:
-        subprocess.run(["clear"])
+        subprocess.run(['clear'])
 
 def print_title(message):
     clear_screen()
@@ -39,8 +39,8 @@ def print_peanut_nametag(message=""):
     else:
         print(Fore.YELLOW + f"peanut > " + Fore.RESET + message)
 
-def print_peanut_tool(tool_name):
-    print(Fore.YELLOW + f"< peanut is calling [{tool_name}] > " + Fore.RESET)
+def print_peanut_command(command):
+    print(Fore.YELLOW + f"< peanut wants to run [{command}] > " + Fore.RESET)
 
 def print_peanut_thinking():
     print(Fore.YELLOW + f"< peanut is thinking... > " + Fore.RESET)
