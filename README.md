@@ -1,5 +1,6 @@
 # peanut
 a minimal harness for tiny models. it's just a little peanut.
+has access to your terminal (powershell, but you could easily change that)
 
 ## how to run it quickly
 1. install [uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -13,8 +14,8 @@ a minimal harness for tiny models. it's just a little peanut.
 - local models struggle with tools, i worked around this by using the `format` option on `ollama.generate()`
     - required the model to select `respond` or `<tool_name>` as its `action`
 
-## what should peanut do?
-- translate natural language to command (os specific)
+## what can peanut do?
+- have a chat
+    - peanut will run commands as you request them
+- translate natural language to command and execute it
     - example: `peanut -t "rename all the files in here to MM-DD-YYYY format"`
-    - needs to gather context, read-only commands in a loop (tev classified?)
-- have a chat?
