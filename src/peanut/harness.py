@@ -94,43 +94,7 @@ def build_chat_prompt(conversation:Conversation) -> str:
 </conversation>
 """ )
 
-def inline_loop(user_message):
-    conversation = Conversation() 
-    prompt = build_inline_prompt(user_message, conversation)
-    response = {}
-    for i in range(MAX_ATTEMPTS):
-        try:
-            response = json.loads(invoke_model(prompt, INLINE_SYSTEM_PROMPT))
-            break
-        except json.decoder.JSONDecodeError:
-            if i == MAX_ATTEMPTS-1:
-                print("peanut is having trouble, try again later.")
-                exit(1)
-            conversation.add_message('system', 'error')
-
-    while response['action'] == 'command':
-        print_peanut_command(response['command'])
-        conversation.add_message('peanut', {response['command']})
-        approval = input("allow? [y/n] > ")
-        if approval == 'y':
-            result = subprocess.run(response['command'].split(" "), shell=True, capture_output=True, text=True)
-            conversation.add_message('system', result)
-        else:
-            conversation.add_message('system', "the user denied you permission to run the command. try something else.")
-        prompt = build_chat_prompt(conversation)
-
-        for i in range(MAX_ATTEMPTS):
-            try:
-                response = json.loads(invoke_model(prompt, INLINE_SYSTEM_PROMPT))
-                break
-            except json.decoder.JSONDecodeError:
-                if i == MAX_ATTEMPTS-1:
-                    print("peanut is having trouble, try again later.")
-                    exit(1)
-    conversation.add_message('peanut', response['message'])
-    print_peanut_nametag(response['message'])
-
-def chat_loop(inline=False, user_message=""):
+def loop(inline=False, user_message=""):
     conversation = Conversation() 
     while True:
         if inline:
